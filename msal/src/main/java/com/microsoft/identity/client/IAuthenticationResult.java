@@ -37,6 +37,12 @@ public interface IAuthenticationResult {
     String getAccessToken();
 
     /**
+     * @return The refresh token requested.
+     */
+    @NonNull
+    String getRefreshToken();
+
+    /**
      * Gets the fully-formed Authorization header value. Includes the Authentication scheme.
      * <p>
      * Example: Bearer eyJ1aWQiOiJj.......

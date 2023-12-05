@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
 import com.microsoft.identity.common.java.authscheme.TokenAuthenticationScheme;
 import com.microsoft.identity.common.java.cache.ICacheRecord;
 import com.microsoft.identity.common.java.dto.AccessTokenRecord;
+import com.microsoft.identity.common.java.dto.RefreshTokenRecord;
 import com.microsoft.identity.common.logging.Logger;
 
 import java.util.Date;
@@ -47,6 +48,7 @@ public final class AuthenticationResult implements IAuthenticationResult {
 
     private final String mTenantId;
     private final AccessTokenRecord mAccessToken;
+    private final RefreshTokenRecord mRefreshToken;
     private final IAccount mAccount;
     private final UUID mCorrelationId;
 
@@ -54,6 +56,7 @@ public final class AuthenticationResult implements IAuthenticationResult {
                          @Nullable final String correlationId) {
         final ICacheRecord mostRecentlyAuthorized = cacheRecords.get(0);
         mAccessToken = mostRecentlyAuthorized.getAccessToken();
+        mRefreshToken = mostRecentlyAuthorized.getRefreshToken();
         mTenantId = mostRecentlyAuthorized.getAccount().getRealm();
         mAccount = AccountAdapter.adapt(cacheRecords).get(0);
         mCorrelationId = sanitizeCorrelationId(correlationId);
@@ -63,6 +66,12 @@ public final class AuthenticationResult implements IAuthenticationResult {
     @NonNull
     public String getAccessToken() {
         return mAccessToken.getSecret();
+    }
+
+    @NonNull
+    @Override
+    public String getRefreshToken() {
+        return mRefreshToken.getSecret();
     }
 
     @NonNull
