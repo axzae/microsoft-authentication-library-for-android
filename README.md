@@ -4,7 +4,7 @@
 
 [![build](https://img.shields.io/github/actions/workflow/status/axzae/microsoft-authentication-library-for-android/publish-maven.yaml)][actions]
 [![github tag](https://img.shields.io/github/v/tag/axzae/microsoft-authentication-library-for-android?label=github)][releases]
-[![maven central](https://img.shields.io/maven-central/v/com.axzae/microsoft-authentication-library-for-android)][mavencentral]
+[![maven central](https://img.shields.io/maven-central/v/com.axzae/msal)][mavencentral]
 
 </p>
 
@@ -23,7 +23,7 @@ This is the enhancement version of the [Microsoft's version](https://github.com/
 // build.gradle.kts (app module)
 
 dependencies {
-    implementation("com.axzae:msal:4.10.1")
+    implementation("com.axzae:msal:4.10.2")
 }
 ```
 
@@ -32,6 +32,6 @@ dependencies {
 
 - [Full Usage Guide](https://github.com/AzureAD/microsoft-authentication-library-for-android)
 
-[mavencentral]: https://central.sonatype.com/artifact/com.axzae/microsoft-authentication-library-for-android
+[mavencentral]: https://central.sonatype.com/artifact/com.axzae/msal
 [actions]: https://github.com/axzae/microsoft-authentication-library-for-android/actions
 [releases]: https://github.com/axzae/microsoft-authentication-library-for-android/releases

@@ -7,7 +7,6 @@ object Setup {
         val targetSdkVersion = 33
         val compileSdkVersion = 34
         val buildToolsVersion = "28.0.3"
-        val versionName = "4.10.1"
 
         // Plugins
         val gradleVersion = "7.4.2"
