@@ -10,10 +10,10 @@ ext {
     buildToolsVersion = "28.0.3"
 
     // Plugins
-    gradleVersion = '7.4.2'
-    kotlinVersion = '1.7.21'
-    spotBugsGradlePluginVersion = '4.7.1'
-    jupiterApiVersion = '5.6.0'
+    gradleVersion = "7.4.2"
+    kotlinVersion = "1.7.21"
+    spotBugsGradlePluginVersion = "4.7.1"
+    jupiterApiVersion = "5.6.0"
 
     //Java Language Support
     coreLibraryDesugaringVersion = "1.1.5"
@@ -48,6 +48,7 @@ ext {
     flatBuffersJavaVersion = "1.12.0"
     daggerVersion = "2.31.2"
     daggerCompilerVersion = "2.31.2"
+    msalCommonVersion = "16.1.1"
     msal4jVersion = "1.10.0"
     mseberaApacheHttpClientVersion = "4.5.8"
     moshiVersion = "1.14.0"
@@ -83,7 +84,7 @@ ext {
 
     //#### The following are TSL version variables - BEGIN
     projectCompileSdkVersion = 29
-    projectBuildToolsVersion = '28.0.3'
+    projectBuildToolsVersion = "28.0.3"
     projectMinSdkVersion = 14
     projectTargetSdkVersion = 29
 
