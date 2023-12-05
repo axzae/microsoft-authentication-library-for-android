@@ -209,7 +209,9 @@ dependencies {
     androidTestImplementation("org.mockito:mockito-android:$rootProject.ext.mockitoAndroidVersion")
 
     snapshotApi(group: "com.microsoft.identity", name: "common", version: rootProject.ext.msalCommonVersion, changing: true)
-    implementation("com.microsoft.identity:common:${rootProject.ext.msalCommonVersion}")
+    implementation("com.microsoft.identity:common:${rootProject.ext.msalCommonVersion}") {
+        exclude group: "com.microsoft.device.display"
+    }
 
     implementation platform("io.opentelemetry:opentelemetry-bom:1.18.0")
     implementation("io.opentelemetry:opentelemetry-api:1.18.0")
