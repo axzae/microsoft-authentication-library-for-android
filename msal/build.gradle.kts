@@ -151,3 +151,7 @@ tasks {
         archives(sourcesJar)
     }
 }
+
+project.afterEvaluate {
+    project.tasks["signMsalPublication"].dependsOn("sourcesJar")
+}

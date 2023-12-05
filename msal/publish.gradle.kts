@@ -11,8 +11,8 @@ configure<PublishingExtension> {
     publications {
         create<MavenPublication>(publicationName) {
             artifactId = property("ARTIFACT_ID").toString()
-            // artifact("$buildDir/outputs/aar/${project.name}-release.aar")
-            artifact("$buildDir/outputs/aar/msal-${project.version}.aar")
+            artifact("$buildDir/libs/${project.name}-${project.version}-sources.jar")
+            artifact("$buildDir/outputs/aar/${project.name}-${project.version}.aar")
 
             pom {
                 name.set(property("DISPLAY_NAME").toString())
