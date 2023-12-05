@@ -9,7 +9,7 @@ plugins {
 
 apply from: "versioning/version_tasks.gradle"
 
-group = "com.microsoft.identity.client"
+group = "com.axzae"
 
 def desugarCode = false
 
@@ -144,29 +144,6 @@ android {
     }
 }
 
-// Task to generate javadoc
-task javadoc(type: Javadoc) {
-    failOnError false
-    source = android.sourceSets.main.java.srcDirs
-    configurations.api.setCanBeResolved(true)
-    classpath += configurations.api
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
-    options.memberLevel = JavadocMemberLevel.PUBLIC
-    options.addStringOption("Xdoclint:none", "-quiet")
-
-    exclude "**/BuildConfig.Java"
-    exclude "**/R.java"
-    destinationDir = reporting.file("$project.buildDir/outputs/jar/javadoc/")
-}
-
-// Task to generate javadoc.jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier "javadoc"
-    destinationDirectory = reporting.file("$project.buildDir/outputs/jar/")
-}
-
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier "sources"
@@ -272,7 +249,7 @@ afterEvaluate {
 publishing {
     publications {
         msal(MavenPublication) {
-            groupId "com.microsoft.identity.client"
+            groupId "com.axzae"
             artifactId "msal"
             //Edit the "version" here for VSTS RC build
             version = project.version
@@ -290,7 +267,7 @@ publishing {
                 )
 
                 // URL
-                asNode().appendNode("url", "https://github.com/AzureAD/microsoft-authentication-library-for-android")
+                asNode().appendNode("url", "https://github.com/axzae/microsoft-authentication-library-for-android")
 
                 // Inception Year
                 asNode().appendNode("inceptionYear", "2016")
@@ -303,11 +280,11 @@ publishing {
                 developerNode.appendNode("name", "You Qi")
 
                 // SCM
-                asNode().appendNode("scm").appendNode("url", "https://github.com/AzureAD/microsoft-authentication-library-for-android/tree/master")
+                asNode().appendNode("scm").appendNode("url", "https://github.com/axzae/microsoft-authentication-library-for-android")
 
                 // Properties
                 def propertiesNode = asNode().appendNode("properties")
-                propertiesNode.appendNode("branch", "master")
+                propertiesNode.appendNode("branch", "main")
                 propertiesNode.appendNode("version", project.version)
 
                 def dependenciesNode = asNode().appendNode("dependencies")
@@ -332,7 +309,6 @@ publishing {
             }
 
             artifact(sourcesJar)
-            artifact(javadocJar)
             artifact("$buildDir/outputs/aar/msal-${project.version}.aar")
         }
     }
@@ -359,7 +335,7 @@ tasks.whenTaskAdded { task ->
             && !task.name.contains("Snapshot")
             && !task.name.contains("Test")
             && !task.name.contains("Local")) {
-        task.dependsOn "sourcesJar" // "javadocJar",
+        task.dependsOn "sourcesJar"
     }
 }
 
