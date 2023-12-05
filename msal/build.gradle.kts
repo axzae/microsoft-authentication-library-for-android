@@ -33,8 +33,6 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             isJniDebuggable = false
-
-            proguardFile(getDefaultProguardFile("proguard-android.txt"))
             proguardFile("consumer-rules.pro")
             buildConfigField("String", "VERSION_NAME", "\"${project.version}\"")
         }
@@ -128,8 +126,8 @@ afterEvaluate {
         val buildFile = file("$buildDir/outputs/aar/msal-dist-release.aar")
         doLast {
             if (buildFile.exists()) {
-                print("Build file $buildFile")
-                val newFileName = "$buildDir/outputs/aar/msal-${Setup.Version.versionName}.aar"
+                print("Build file: $buildFile")
+                val newFileName = "$buildDir/outputs/aar/msal-$version.aar"
                 println("Renaming build file $buildFile to '$newFileName'")
                 if (!buildFile.renameTo(file(newFileName))) {
                     println("Rename failed!")
@@ -139,15 +137,86 @@ afterEvaluate {
     }
 }
 
-apply(from = "$projectDir/publish.gradle.kts")
+val sourcesJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("sources")
+    from(android.sourceSets.getByName("main").java.srcDirs)
+}
 
-tasks {
-    val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
-        from(android.sourceSets.getByName("main").java.srcDirs)
+val publicationName = property("ARTIFACT_ID").toString()
+group = property("GROUP").toString()
+version = property("VERSION").toString()
+
+configure<PublishingExtension> {
+    publications {
+        create<MavenPublication>(publicationName) {
+            artifactId = publicationName
+            artifact(sourcesJar)
+            artifact("$buildDir/outputs/aar/$artifactId-$version.aar")
+
+            pom {
+                name.set(property("DISPLAY_NAME").toString())
+                description.set(property("DESCRIPTION").toString())
+                url.set(property("WEBSITE").toString())
+
+                organization {
+                    name.set(property("ORGANIZATION_NAME").toString())
+                    url.set(property("ORGANIZATION_URL").toString())
+                }
+
+                licenses {
+                    license {
+                        name.set(property("LICENSE_NAME").toString())
+                        url.set(property("LICENSE_URL").toString())
+                    }
+                }
+
+                scm {
+                    val (vcsHost, vcsUser, vcsRepo) = property("VCS_URL").toString()
+                        .substringAfter("https://")
+                        .split("/")
+                    url.set(property("VCS_URL").toString())
+                    connection.set("scm:git:git://$vcsHost/$vcsUser/$vcsRepo.git")
+                    developerConnection.set("scm:git:ssh://git@$vcsHost:$vcsUser/$vcsRepo.git")
+                }
+
+                developers {
+                    developer {
+                        name.set(property("DEVELOPER_NAME").toString())
+                    }
+                }
+
+                withXml {
+                    val dependenciesNode = asNode().appendNode("dependencies")
+                    for (dependency in configurations.implementation.get().allDependencies.asIterable()) {
+                        dependenciesNode.appendNode("dependency").apply {
+                            appendNode("groupId", dependency.group)
+                            appendNode("artifactId", dependency.name)
+                            appendNode("version", dependency.version)
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    artifacts {
-        archives(sourcesJar)
+    repositories {
+        maven {
+            name = "MavenCentral"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = System.getenv("SONATYPE_USERNAME")
+                password = System.getenv("SONATYPE_SECRET")
+            }
+        }
     }
+}
+
+configure<SigningExtension> {
+    val signingKey = System.getenv("GPG_SIGNING_KEY")
+    val signingPassword = System.getenv("GPG_SIGNING_PASSWORD")
+    useInMemoryPgpKeys(signingKey.chunked(64).joinToString("\n"), signingPassword)
+
+    val pubExt = checkNotNull(extensions.findByType(PublishingExtension::class.java))
+    val publication = pubExt.publications[publicationName]
+    sign(publication)
 }
