@@ -13,7 +13,6 @@ The MSAL library for Android gives your app the ability to use the [Microsoft Cl
 
 This is the enhancement version of the [Microsoft's version](https://github.com/AzureAD/microsoft-authentication-library-for-android). By using this version:
 1. Expose **RefreshToken** in `AuthenticationResult`
-2. Exclude `com.microsoft.device.display` dependency
 
 ## Setup
 
@@ -24,9 +23,22 @@ This is the enhancement version of the [Microsoft's version](https://github.com/
 
 dependencies {
     implementation("com.axzae:msal:4.10.2")
+        exclude(group = "com.microsoft.device.display")
 }
 ```
 
+## Usage
+
+```kotlin
+object : AuthenticationCallback {
+    override fun onSuccess(authenticationResult: IAuthenticationResult?) {
+        authenticationResult ?: return
+        
+        // Access to refresh token
+        viewModel.setToken(authenticationResult.refreshToken)
+    }
+}
+```
 
 ## See Also
 
